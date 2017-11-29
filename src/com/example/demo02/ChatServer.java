@@ -27,9 +27,9 @@ public class ChatServer {
 	 */
 	public ChatServer(int port) {
 		try {
-			//实例化ServerSocket
+			//--实例化ServerSocket
 			serverSocket = new ServerSocket(port);
-			//实例化Map
+			//--实例化Map集合.作用是保存每一个登录用户的名称和PrintWriter
 			maps = new HashMap<>();
 			/**
 			 * 初始化线程池对象.设定线程池中线程数量为10.
@@ -74,9 +74,10 @@ public class ChatServer {
 	 *
 	 */
 	class GetClientMshHandler implements Runnable {
-		//保存客户端生成的S
+
+		//--保存客户端连接后生成的Socket对象.
 		private Socket socket;
-		//保存客户端名称
+		//--保存客户端的名称
 		private String clientName;
 
 		public GetClientMshHandler(Socket socket) {
@@ -127,11 +128,11 @@ public class ChatServer {
 		@Override
 		public void run() {
 			PrintWriter pw = null;
-			// --通过Socket获取输出流对象.用于将消息发送给客户端.
-			OutputStream os;
+			// --通过Socket获取输出流对象.用于将消息发送给客户端.			
 			try {
-				os = socket.getOutputStream();
+				OutputStream os = socket.getOutputStream();
 				OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
+				//-- 这里一定要有true. 代表自动刷新.
 				pw = new PrintWriter(osw,true);
 
 				// --调用getClientName方法 获取用户名
@@ -143,7 +144,8 @@ public class ChatServer {
 				Thread.sleep(100);
 
 				/*
-				 * 服务端发送欢迎用户登录的信息.发给所有的客户端.
+				 * 服务端向所有已经登录的用户发送
+				 * 欢迎用户登录的信息
 				 */
 				sendMsgToAll("[系统通知]:欢迎" + clientName + "登录聊天室");
 
